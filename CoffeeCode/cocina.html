@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cafetería - Cocina</title>
+</head>
+<body>
+  <h2>Cocina</h2>
+
+  <input id="nombre" placeholder="Nombre">
+  <input id="precio" type="number" placeholder="Precio">
+  <input id="categoria" placeholder="Categoría">
+  <button onclick="agregar()">Agregar</button>
+
+  <ul id="lista"></ul>
+
+  <script src="cocina.js"></script>
+  <script>
+    function mostrar() {
+      document.getElementById("lista").innerHTML =
+        listarProductos().map(p => `<li>${p.nombre} - $${p.precio} (${p.categoria})
+          <button onclick="editar(${p.id})">Editar</button>
+          <button onclick="borrar(${p.id})">Eliminar</button></li>`).join("");
+    }
+
+    function agregar() {
+      const nombre = document.getElementById("nombre").value.trim();
+      const precio = Number(document.getElementById("precio").value);
+      const categoria = document.getElementById("categoria").value.trim();
+      if (!nombre || precio <= 0) {
+        alert("Pon un nombre y un precio mayor a 0");
+        return;
+      }
+      agregarProducto(nombre, precio, categoria);
+      document.getElementById("nombre").value = "";
+      document.getElementById("precio").value = "";
+      document.getElementById("categoria").value = "";
+      mostrar();
+    }
+
+    function editar(id) {
+      const p = listarProductos().find(p => p.id === id);
+      const nombre = prompt("Nuevo nombre:", p.nombre);
+      const precio = Number(prompt("Nuevo precio:", p.precio));
+      if (!nombre || precio <= 0) return;
+      editarProducto(id, { nombre, precio });
+      mostrar();
+    }
+
+    function borrar(id) {
+      eliminarProducto(id);
+      mostrar();
+    }
+
+    mostrar();
+  </script>
+</body>
+</html>
