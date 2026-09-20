@@ -1,7 +1,3 @@
-// cocina.js
-// Este archivo debe cargarse ANTES que caja.js y Menu.js en el HTML,
-// porque ellos usan listarProductos().
-
 let productos = [];
 let siguienteId = 1;
 
@@ -15,15 +11,12 @@ function listarProductos() {
   return productos;
 }
 
-// ------- Productos precargados al iniciar -------
+// Productos predeterminados
 agregarProducto("Café americano", 35, "bebida");
 agregarProducto("Café con leche", 40, "bebida");
 agregarProducto("Hamburguesa", 80, "comida");
 agregarProducto("Refresco", 25, "bebida");
 agregarProducto("Papas fritas", 40, "comida");
-
-
-// ------- Funciones conectadas a los botones de Cliente.html -------
 
 function agregar() {
     let nombre = prompt("Nombre del producto:");
