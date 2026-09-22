@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cliente</title>
+    <style>
+      .contenedor {
+    width: 800px;
+    margin: 30px auto;
+}
+
+.seccion {
+    border: 2px solid black;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <h1>CAFETERÍA</h1>
+
+
+        
+        <div class="seccion">
+
+            <h2>Cliente</h2>
+
+            <button onclick="consultarProductos()">
+                Consultar productos
+            </button>
+
+            <button onclick="crearPedido()">
+                Crear pedido
+            </button>
+
+            <button onclick="consultarPedidos()">
+                Consultar pedido
+            </button>
+
+            <button onclick="listarPedidos()">
+                Listar pedidos
+            </button>
+
+        </div>
+
+
+        
+        <div class="seccion">
+
+            <h2>Caja</h2>
+
+            <button onclick="consultarPedidoCaja()">
+                Consultar pedido
+            </button>
+
+            <button onclick="realizarPago()">
+                Realizar pago
+            </button>
+
+            <button onclick="listarPagos()">
+                Listar pagos
+            </button>
+
+        </div>
+
+
+        <!-- CONTENEDOR DE COCINA -->
+        <div class="seccion">
+
+            <h2>Cocina</h2>
+
+            <button onclick="mostrarProductosBaratos()"> Productos baratos
+            </button>
+
+            <button onclick="mostrarProductosCaros()">
+             Productos caros
+            </button>
+
+            <button onclick="mostrarBebidas()">
+             Bebidas
+            </button>  
+
+            <button onclick="mostrarPostres()">
+             Postres
+            </button>
+
+            <button onclick="agregar()">
+                Agregar producto
+            </button>
+
+            <button onclick="mostrar()">
+                Listar productos
+            </button>
+
+            <button onclick="editarProducto()">
+                Editar producto
+            </button>
+
+            <button onclick="eliminarProducto()">
+                Eliminar producto
+            </button>
+
+        </div>
+
+
+        <!-- RESULTADO -->
+        <div id="resultado">
+
+            <h2>Bienvenido</h2>
+
+            <p>
+                Selecciona una opción.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="cocina.js"></script>
+    <script src="caja.js"></script>
+    <script src="Menu.js"></script>
+
+</body>
+
+</html>
