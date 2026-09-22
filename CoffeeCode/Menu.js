@@ -1,3 +1,4 @@
+
 let pedidos = [];
 
 
@@ -12,7 +13,7 @@ function consultarProductos() {
                 <p>
                     <strong>${producto.id}. ${producto.nombre}</strong>
                     - $${producto.precio}
-                    - Disponible: ${producto.disponible}
+                    - Cantidad disponible: ${producto.cantidad}
                 </p>
             `;
 
@@ -52,12 +53,28 @@ function crearPedido() {
 
     let numeroProducto = prompt("Ingresa el número del producto:");
 
-    let cantidad = prompt("Ingresa la cantidad:");
+    let cantidad = Number(prompt("Ingresa la cantidad:"));
 
     // Llamamos a la función de Cocina
-    let producto = listarProductos().find(p => p.id == numeroProducto);//find busca el numero del producto 
-    //  resta la cantidad solicitada A la cantidad disponible del producto
-    producto.disponible = producto.disponible - cantidad;
+    let producto = listarProductos().find(p => p.id == numeroProducto);
+
+    
+    if (!producto) {
+        alert("Producto no encontrado");
+        return;
+    }
+
+    
+    if (cantidad <= 0 || cantidad > producto.cantidad) {
+        alert("Cantidad no disponible");
+        return;
+    }
+
+    // Restamos la cantidad solicitada a la cantidad disponible
+    producto.cantidad = producto.cantidad - cantidad;
+
+    // Actualizamos si el producto sigue disponible
+    producto.disponible = producto.cantidad > 0;
 
     
     let pedido = {
@@ -76,6 +93,7 @@ function crearPedido() {
         <p><strong>Producto:</strong> ${producto.nombre}</p>
         <p><strong>Precio:</strong> $${producto.precio}</p>
         <p><strong>Cantidad:</strong> ${cantidad}</p>
+        <p><strong>Cantidad restante:</strong> ${producto.cantidad}</p>
     `;
 
     console.log(`Pedido creado para ${cliente}`);
@@ -103,3 +121,4 @@ function listarPedidos() {
 
     document.getElementById("resultado").innerHTML = contenido;
 }
+
