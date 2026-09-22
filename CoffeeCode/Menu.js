@@ -1,4 +1,3 @@
-
 let pedidos = [];
 
 
@@ -6,18 +5,24 @@ function consultarProductos() {
 
     let contenido = "<h2>Productos disponibles</h2>";
 
-    listarProductos().forEach((producto) => {
 
-        contenido += `
-            <p>
-                <strong>${producto.id}. ${producto.nombre}</strong>
-                - $${producto.precio}
-            </p>
-        `;
+    listarProductos().forEach((producto) => { 
+        if (producto.disponible === true) {
+            contenido += `
+                <p>
+                    <strong>${producto.id}. ${producto.nombre}</strong>
+                    - $${producto.precio}
+                    - Disponible: ${producto.disponible}
+                </p>
+            `;
 
+        }
+        
     });
 
     document.getElementById("resultado").innerHTML = contenido;
+    
+    
 }
 
 
@@ -50,8 +55,11 @@ function crearPedido() {
     let cantidad = prompt("Ingresa la cantidad:");
 
     // Llamamos a la función de Cocina
-    let producto = listarProductos().find(p => p.id == numeroProducto);
+    let producto = listarProductos().find(p => p.id == numeroProducto);//find busca el numero del producto 
+    //  resta la cantidad solicitada A la cantidad disponible del producto
+    producto.disponible = producto.disponible - cantidad;
 
+    
     let pedido = {
         cliente: cliente,
         producto: producto.nombre,
