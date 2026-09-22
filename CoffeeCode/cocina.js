@@ -155,23 +155,6 @@ function obtenerPromociones() {
     return promociones;
 }
 
-function mostrarPromociones() {
-    let contenido = "<h2>Promociones</h2>";
-
-    promociones.forEach((promocion) => {
-        contenido += `
-            <div>
-                <hr>
-                <p><strong>${promocion.nombre}</strong></p>
-                <p>${promocion.descripcion}</p>
-                <p>Descuento: ${promocion.descuento}%</p>
-            </div>
-        `;
-    });
-
-    document.getElementById("resultado").innerHTML = contenido;
-}
-
 function mostrarBebidas() {
     mostrarProductosFiltrados("Bebidas", producto => producto.categoria.toLowerCase() === "bebida");
 }
