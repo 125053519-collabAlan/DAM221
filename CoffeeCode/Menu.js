@@ -1,19 +1,18 @@
 
 let pedidos = [];
+
 function mostrarPromociones() {
     let contenido = "<h2>Promociones</h2>";
 
-    listarProductos().forEach((producto) => {
-        if (producto.precio < 10) {
-            contenido += `
-
-                <div>
-                    <hr>
-                    <p><strong>${producto.id}. ${producto.nombre}</strong> - $${producto.precio}</p>
-                    <p>Categoría: ${producto.categoria}</p>
-                </div>
-            `;
-        }
+    promociones.forEach((promocion) => {
+        contenido += `
+            <div>
+                <hr>
+                <p><strong>${promocion.nombre}</strong></p>
+                <p>${promocion.descripcion}</p>
+                <p>Descuento: ${promocion.descuento}%</p>
+            </div>
+        `;
     });
 
     document.getElementById("resultado").innerHTML = contenido;
