@@ -1,8 +1,15 @@
 let productos = [];
 let siguienteId = 1;
 
-function agregarProducto(nombre, precio, categoria) {
-  const producto = { id: siguienteId++, nombre, precio, categoria, disponible: true };
+function agregarProducto(nombre, precio, categoria, cantidad = 10) {
+    const producto = {
+        id: siguienteId++,
+        nombre,
+        precio,
+        categoria,
+        cantidad,
+        disponible: cantidad > 0
+    };
   productos.push(producto);
   return producto;
 }
@@ -12,23 +19,26 @@ function listarProductos() {
 }
 
 // Productos predeterminados
-agregarProducto("Café americano", 35, "bebida");
-agregarProducto("Café con leche", 40, "bebida");
-agregarProducto("Hamburguesa", 80, "comida");
-agregarProducto("Refresco", 25, "bebida");
-agregarProducto("Papas fritas", 40, "comida");
+agregarProducto("Café americano", 35, "bebida", 10);
+agregarProducto("Café con leche", 40, "bebida", 10);
+agregarProducto("Hamburguesa", 80, "comida", 10);
+agregarProducto("Refresco", 25, "bebida", 10);
+agregarProducto("Papas fritas", 40, "comida", 10);
+agregarProducto("Pay de queso", 45, "postre", 10);
+agregarProducto("Gelatina", 20, "postre", 10);
 
 function agregar() {
     let nombre = prompt("Nombre del producto:");
     let precio = Number(prompt("Precio del producto:"));
     let categoria = prompt("Categoría (bebida/comida):");
+    let cantidad = Number(prompt("Cantidad disponible:"));
 
-    if (!nombre || precio <= 0) {
+    if (!nombre || precio <= 0 || !Number.isInteger(cantidad) || cantidad < 0) {
         alert("Datos inválidos");
         return;
     }
 
-    let producto = agregarProducto(nombre, precio, categoria);
+    let producto = agregarProducto(nombre, precio, categoria, cantidad);
 
     document.getElementById("resultado").innerHTML = `
         <h2>Producto agregado</h2>
@@ -36,6 +46,7 @@ function agregar() {
         <p><strong>Nombre:</strong> ${producto.nombre}</p>
         <p><strong>Precio:</strong> $${producto.precio}</p>
         <p><strong>Categoría:</strong> ${producto.categoria}</p>
+        <p><strong>Cantidad disponible:</strong> ${producto.cantidad}</p>
     `;
 }
 
@@ -51,12 +62,52 @@ function mostrar() {
             <div>
                 <hr>
                 <p><strong>${p.id}. ${p.nombre}</strong> - $${p.precio} (${p.categoria})</p>
-                <p>${p.disponible ? "Disponible" : "No disponible"}</p>
+                <p>Cantidad disponible: ${p.cantidad}</p>
+                <p>${p.cantidad > 0 ? "Disponible" : "No disponible"}</p>
             </div>
         `;
     });
 
     document.getElementById("resultado").innerHTML = contenido;
+}
+
+function mostrarProductosFiltrados(titulo, filtro) {
+    const productosFiltrados = productos.filter(filtro);
+    let contenido = `<h2>${titulo}</h2>`;
+
+    if (productosFiltrados.length === 0) {
+        contenido += "<p>No hay productos para mostrar.</p>";
+    }
+
+    productosFiltrados.forEach((producto) => {
+        contenido += `
+            <div>
+                <hr>
+                <p><strong>${producto.id}. ${producto.nombre}</strong> - $${producto.precio}</p>
+                <p>Categoría: ${producto.categoria}</p>
+                <p>Cantidad disponible: ${producto.cantidad}</p>
+                <p>${producto.cantidad > 0 ? "Disponible" : "No disponible"}</p>
+            </div>
+        `;
+    });
+
+    document.getElementById("resultado").innerHTML = contenido;
+}
+
+function mostrarProductosBaratos() {
+    mostrarProductosFiltrados("Productos baratos", producto => producto.precio <= 40);
+}
+
+function mostrarProductosCaros() {
+    mostrarProductosFiltrados("Productos caros", producto => producto.precio > 40);
+}
+
+function mostrarBebidas() {
+    mostrarProductosFiltrados("Bebidas", producto => producto.categoria.toLowerCase() === "bebida");
+}
+
+function mostrarPostres() {
+    mostrarProductosFiltrados("Postres", producto => producto.categoria.toLowerCase() === "postre");
 }
 
 function editarProducto() {
@@ -70,15 +121,21 @@ function editarProducto() {
 
     let nuevoNombre = prompt("Nuevo nombre (deja vacío para no cambiar):", producto.nombre);
     let nuevoPrecio = prompt("Nuevo precio (deja vacío para no cambiar):", producto.precio);
+    let nuevaCantidad = prompt("Nueva cantidad (deja vacío para no cambiar):", producto.cantidad);
 
     if (nuevoNombre) producto.nombre = nuevoNombre;
-    if (nuevoPrecio) producto.precio = Number(nuevoPrecio);
+    if (nuevoPrecio && Number(nuevoPrecio) > 0) producto.precio = Number(nuevoPrecio);
+    if (nuevaCantidad !== "" && Number.isInteger(Number(nuevaCantidad)) && Number(nuevaCantidad) >= 0) {
+        producto.cantidad = Number(nuevaCantidad);
+        producto.disponible = producto.cantidad > 0;
+    }
 
     document.getElementById("resultado").innerHTML = `
         <h2>Producto actualizado</h2>
         <p><strong>ID:</strong> ${producto.id}</p>
         <p><strong>Nombre:</strong> ${producto.nombre}</p>
         <p><strong>Precio:</strong> $${producto.precio}</p>
+        <p><strong>Cantidad disponible:</strong> ${producto.cantidad}</p>
     `;
 }
 
