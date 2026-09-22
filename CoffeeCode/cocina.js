@@ -26,6 +26,9 @@ agregarProducto("Refresco", 25, "bebida", 10);
 agregarProducto("Papas fritas", 40, "comida", 10);
 agregarProducto("Pay de queso", 45, "postre", 10);
 agregarProducto("Gelatina", 20, "postre", 10);
+agregarProducto("Pastel de chocolate", 50, "postre", 10);
+agregarProducto("Té helado", 30, "bebida", 10);
+agregarProducto("Sándwich", 60, "comida", 10);
 
 function agregar() {
     let nombre = prompt("Nombre del producto:");
@@ -95,11 +98,78 @@ function mostrarProductosFiltrados(titulo, filtro) {
 }
 
 function mostrarProductosBaratos() {
-    mostrarProductosFiltrados("Productos baratos", producto => producto.precio <= 40);
+    const productosBaratos = productos
+        .filter(producto => producto.precio <= 40)
+        .sort((a, b) => b.precio - a.precio);
+    mostrarListaDeProductos("Productos baratos", productosBaratos);
 }
 
 function mostrarProductosCaros() {
-    mostrarProductosFiltrados("Productos caros", producto => producto.precio > 40);
+    const productosCaros = productos
+        .filter(producto => producto.precio > 40)
+        .sort((a, b) => a.precio - b.precio);
+    mostrarListaDeProductos("Productos caros", productosCaros);
+}
+
+function mostrarListaDeProductos(titulo, productosParaMostrar) {
+    let contenido = `<h2>${titulo}</h2>`;
+
+    if (productosParaMostrar.length === 0) {
+        contenido += "<p>No hay productos para mostrar.</p>";
+    }
+
+    productosParaMostrar.forEach((producto) => {
+        contenido += `
+            <div>
+                <hr>
+                <p><strong>${producto.id}. ${producto.nombre}</strong> - $${producto.precio}</p>
+                <p>Categoría: ${producto.categoria}</p>
+                <p>Cantidad disponible: ${producto.cantidad}</p>
+                <p>${producto.cantidad > 0 ? "Disponible" : "No disponible"}</p>
+            </div>
+        `;
+    });
+
+    document.getElementById("resultado").innerHTML = contenido;
+}
+
+const promociones = [
+    {
+        nombre: "Desayuno cafetero",
+        descripcion: "Café con leche y papas fritas",
+        descuento: 10
+    },
+    {
+        nombre: "Dulce de la casa",
+        descripcion: "Café americano y pay de queso",
+        descuento: 15
+    },
+    {
+        nombre: "Combo hamburguesa",
+        descripcion: "Hamburguesa y refresco",
+        descuento: 20
+    }
+];
+
+function obtenerPromociones() {
+    return promociones;
+}
+
+function mostrarPromociones() {
+    let contenido = "<h2>Promociones</h2>";
+
+    promociones.forEach((promocion) => {
+        contenido += `
+            <div>
+                <hr>
+                <p><strong>${promocion.nombre}</strong></p>
+                <p>${promocion.descripcion}</p>
+                <p>Descuento: ${promocion.descuento}%</p>
+            </div>
+        `;
+    });
+
+    document.getElementById("resultado").innerHTML = contenido;
 }
 
 function mostrarBebidas() {
