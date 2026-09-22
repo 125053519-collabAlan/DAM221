@@ -1,5 +1,3 @@
-let pagos = [];
-
 function consultarPedidoCaja() {
     let numero = prompt("Ingresa el número del pedido:");
     let pedido = pedidos[numero - 1];
@@ -9,12 +7,15 @@ function consultarPedidoCaja() {
         return;
     }
 
+    // Destructuring: sacamos las propiedades del objeto "pedido" en una sola línea
+    const { cliente, producto, precio, cantidad } = pedido;
+
     document.getElementById("resultado").innerHTML = `
         <h2>Pedido #${numero}</h2>
-        <p><strong>Cliente:</strong> ${pedido.cliente}</p>
-        <p><strong>Producto:</strong> ${pedido.producto}</p>
-        <p><strong>Precio:</strong> $${pedido.precio}</p>
-        <p><strong>Cantidad:</strong> ${pedido.cantidad}</p>
+        <p><strong>Cliente:</strong> ${cliente}</p>
+        <p><strong>Producto:</strong> ${producto}</p>
+        <p><strong>Precio:</strong> $${precio}</p>
+        <p><strong>Cantidad:</strong> ${cantidad}</p>
     `;
 }
 
@@ -27,45 +28,28 @@ function realizarPago() {
         return;
     }
 
-    let totalPagar = pedido.precio * pedido.cantidad;
+    // Destructuring
+    const { cliente, producto, precio, cantidad } = pedido;
 
-    pagos.push({
-        cliente: pedido.cliente,
-        producto: pedido.producto,
-        cantidad: pedido.cantidad,
-        totalPagar: totalPagar
-    });
+    // reduce() aplicado a ESTE pedido individual: creamos un arreglo con el precio
+    // repetido "cantidad" veces (una entrada por cada unidad pedida) y las sumamos.
+    const unidades = Array(cantidad).fill(precio);
+    const subtotal = unidades.reduce((acumulador, precioUnidad) => {
+        return acumulador + precioUnidad;
+    }, 0);
+
+    const IVA = subtotal * 0.16;
+    const total = subtotal + IVA;
 
     document.getElementById("resultado").innerHTML = `
-        <h2>Pago realizado</h2>
-        <p><strong>Cliente:</strong> ${pedido.cliente}</p>
-        <p><strong>Producto:</strong> ${pedido.producto}</p>
-        <p><strong>Cantidad:</strong> ${pedido.cantidad}</p>
-        <p><strong>Total pagado:</strong> $${totalPagar}</p>
+        <h2>Pago realizado - Pedido #${numero}</h2>
+        <p><strong>Cliente:</strong> ${cliente}</p>
+        <p><strong>Producto:</strong> ${producto}</p>
+        <p><strong>Cantidad:</strong> ${cantidad}</p>
+        <p><strong>Subtotal:</strong> $${subtotal.toFixed(2)}</p>
+        <p><strong>IVA (16%):</strong> $${IVA.toFixed(2)}</p>
+        <p><strong>Total a pagar:</strong> $${total.toFixed(2)}</p>
     `;
 
-    console.log(`Pago registrado para ${pedido.cliente}: $${totalPagar}`);
-}
-
-function listarPagos() {
-    let contenido = "<h2>Pagos realizados</h2>";
-
-    if (pagos.length === 0) {
-        contenido += "<p>Aún no hay pagos registrados.</p>";
-    }
-
-    pagos.forEach((p, indice) => {
-        contenido += `
-            <div>
-                <hr>
-                <p><strong>Pago #${indice + 1}</strong></p>
-                <p>Cliente: ${p.cliente}</p>
-                <p>Producto: ${p.producto}</p>
-                <p>Cantidad: ${p.cantidad}</p>
-                <p>Total: $${p.totalPagar}</p>
-            </div>
-        `;
-    });
-
-    document.getElementById("resultado").innerHTML = contenido;
+    console.log(`Pago calculado para ${cliente}: $${total.toFixed(2)}`);
 }
