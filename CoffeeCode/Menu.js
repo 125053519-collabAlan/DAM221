@@ -1,10 +1,12 @@
 
 let pedidos = [];
-//  mostrar diferentes estados como pedido recibido,preparando,empacado,entregado o cancelado
+
+// mostrar diferentes estados como pedido recibido, preparando, empacado, entregado o cancelado
 function actualizarEstadoPedido(numeroPedido, nuevoEstado) {
     let posicion = numeroPedido - 1;
     pedidos[posicion].estado = nuevoEstado;
 }
+
 function mostrarPromociones() {
     let contenido = "<h2>Promociones</h2>";
 
@@ -18,7 +20,6 @@ function mostrarPromociones() {
             </div>
         `;
     });
-    
 
     document.getElementById("resultado").innerHTML = contenido;
 }
@@ -27,8 +28,7 @@ function consultarProductos() {
 
     let contenido = "<h2>Productos disponibles</h2>";
 
-
-    listarProductos().forEach((producto) => { 
+    listarProductos().forEach((producto) => {
         if (producto.disponible === true) {
             contenido += `
                 <p>
@@ -37,16 +37,11 @@ function consultarProductos() {
                     - Cantidad disponible: ${producto.cantidad}
                 </p>
             `;
-
         }
-        
     });
 
     document.getElementById("resultado").innerHTML = contenido;
-    
-    
 }
-
 
 function consultarPedidos() {
 
@@ -68,7 +63,6 @@ function consultarPedidos() {
     `;
 }
 
-
 function crearPedido() {
 
     let cliente = prompt("Ingresa el nombre del cliente:");
@@ -80,13 +74,11 @@ function crearPedido() {
     // Llamamos a la función de Cocina
     let producto = listarProductos().find(p => p.id == numeroProducto);
 
-    
     if (!producto) {
         alert("Producto no encontrado");
         return;
     }
 
-    
     if (cantidad <= 0 || cantidad > producto.cantidad) {
         alert("Cantidad no disponible");
         return;
@@ -98,12 +90,12 @@ function crearPedido() {
     // Actualizamos si el producto sigue disponible
     producto.disponible = producto.cantidad > 0;
 
-    
     let pedido = {
         cliente: cliente,
         producto: producto.nombre,
         precio: producto.precio,
-        cantidad: cantidad
+        cantidad: cantidad,
+        estado: "Recibido"
     };
 
     pedidos.push(pedido);
@@ -116,11 +108,23 @@ function crearPedido() {
         <p><strong>Precio:</strong> $${producto.precio}</p>
         <p><strong>Cantidad:</strong> ${cantidad}</p>
         <p><strong>Cantidad restante:</strong> ${producto.cantidad}</p>
+        <p><strong>Estado:</strong> ${pedido.estado}</p>
     `;
 
     console.log(`Pedido creado para ${cliente}`);
-}
 
+    setTimeout(() => {
+        actualizarEstadoPedido(pedidos.length, "Preparando");
+    }, 5000);
+
+    setTimeout(() => {
+        actualizarEstadoPedido(pedidos.length, "Empacando");
+    }, 10000);
+
+    setTimeout(() => {
+        actualizarEstadoPedido(pedidos.length, "Pedido entregado");
+    }, 15000);
+}
 
 function listarPedidos() {
 
@@ -144,4 +148,3 @@ function listarPedidos() {
 
     document.getElementById("resultado").innerHTML = contenido;
 }
-
