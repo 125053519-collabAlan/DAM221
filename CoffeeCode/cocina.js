@@ -8,7 +8,8 @@ function agregarProducto(nombre, precio, categoria, cantidad = 10) {
         precio,
         categoria,
         cantidad,
-        disponible: cantidad > 0
+        disponible: cantidad > 0,
+        estado: cantidad > 0 ? "Disponible" : "Agotado"
     };
   productos.push(producto);
   return producto;
@@ -66,6 +67,7 @@ function mostrar() {
                 <hr>
                 <p><strong>${p.id}. ${p.nombre}</strong> - $${p.precio} (${p.categoria})</p>
                 <p>Cantidad disponible: ${p.cantidad}</p>
+                <p>Estado: ${p.estado}</p>
                 <p>${p.cantidad > 0 ? "Disponible" : "No disponible"}</p>
             </div>
         `;
@@ -76,25 +78,7 @@ function mostrar() {
 
 function mostrarProductosFiltrados(titulo, filtro) {
     const productosFiltrados = productos.filter(filtro);
-    let contenido = `<h2>${titulo}</h2>`;
-
-    if (productosFiltrados.length === 0) {
-        contenido += "<p>No hay productos para mostrar.</p>";
-    }
-
-    productosFiltrados.forEach((producto) => {
-        contenido += `
-            <div>
-                <hr>
-                <p><strong>${producto.id}. ${producto.nombre}</strong> - $${producto.precio}</p>
-                <p>Categoría: ${producto.categoria}</p>
-                <p>Cantidad disponible: ${producto.cantidad}</p>
-                <p>${producto.cantidad > 0 ? "Disponible" : "No disponible"}</p>
-            </div>
-        `;
-    });
-
-    document.getElementById("resultado").innerHTML = contenido;
+    mostrarListaDeProductos(titulo, productosFiltrados);
 }
 
 function mostrarProductosBaratos() {
@@ -125,6 +109,7 @@ function mostrarListaDeProductos(titulo, productosParaMostrar) {
                 <p><strong>${producto.id}. ${producto.nombre}</strong> - $${producto.precio}</p>
                 <p>Categoría: ${producto.categoria}</p>
                 <p>Cantidad disponible: ${producto.cantidad}</p>
+                <p>Estado: ${producto.estado}</p>
                 <p>${producto.cantidad > 0 ? "Disponible" : "No disponible"}</p>
             </div>
         `;
@@ -153,6 +138,56 @@ const promociones = [
 
 function obtenerPromociones() {
     return promociones;
+}
+
+// Prepara un producto usando una Promesa.
+function prepararCafe(nombre) {
+    return new Promise((resolve, reject) => {
+        const producto = productos.find(
+            producto => producto.nombre.toLowerCase() === nombre.toLowerCase()
+        );
+
+        if (!producto || producto.cantidad === 0) {
+            reject(`Falta ingrediente: no hay ${nombre}`);
+            return;
+        }
+
+        setTimeout(() => {
+            if (Math.random() < 0.2) {
+                producto.estado = "Disponible";
+                reject(`Error en cocina: se cayó el ${nombre}`);
+                return;
+            }
+
+            producto.estado = "Empacando";
+
+            setTimeout(() => {
+                producto.cantidad -= 1;
+                producto.disponible = producto.cantidad > 0;
+                producto.estado = "Producto entregado";
+                resolve(`${nombre} listo y entregado`);
+            }, 1000);
+        }, 2000);
+    });
+}
+
+// Inicia la preparación y muestra su resultado.
+function simularPreparacion() {
+    const nombre = prompt("¿Qué producto quieres preparar?");
+    const resultado = document.getElementById("resultado");
+
+    resultado.innerHTML = "<p>Preparando...</p>";
+
+    prepararCafe(nombre)
+        .then(mensaje => {
+            resultado.innerHTML = `<p>${mensaje}</p>`;
+        })
+        .catch(error => {
+            resultado.innerHTML = `<p>${error}</p>`;
+        })
+        .finally(() => {
+            resultado.innerHTML += "<p>La preparación terminó.</p>";
+        });
 }
 
 function mostrarBebidas() {
