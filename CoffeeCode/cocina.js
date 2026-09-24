@@ -141,8 +141,9 @@ function obtenerPromociones() {
 }
 
 // Prepara un producto usando una Promesa.
-function prepararCafe(nombre) {
+function prepararCafe(nombre, actualizarEstado) {
     return new Promise((resolve, reject) => {
+
         const producto = productos.find(
             producto => producto.nombre.toLowerCase() === nombre.toLowerCase()
         );
@@ -152,7 +153,10 @@ function prepararCafe(nombre) {
             return;
         }
 
+        actualizarEstado("Preparando");
+
         setTimeout(() => {
+
             if (Math.random() < 0.2) {
                 producto.estado = "Disponible";
                 reject(`Error en cocina: se cayó el ${nombre}`);
@@ -161,16 +165,23 @@ function prepararCafe(nombre) {
 
             producto.estado = "Empacando";
 
+            actualizarEstado("Empacando");
+
             setTimeout(() => {
+
                 producto.cantidad -= 1;
                 producto.disponible = producto.cantidad > 0;
                 producto.estado = "Producto entregado";
+
+                actualizarEstado("Pedido entregado");
+
                 resolve(`${nombre} listo y entregado`);
+
             }, 1000);
+
         }, 2000);
     });
 }
-
 // Inicia la preparación y muestra su resultado.
 function simularPreparacion() {
     const nombre = prompt("¿Qué producto quieres preparar?");

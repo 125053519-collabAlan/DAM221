@@ -1,10 +1,21 @@
 
 let pedidos = [];
 
-// mostrar diferentes estados como pedido recibido, preparando, empacado, entregado o cancelado
+
 function actualizarEstadoPedido(numeroPedido, nuevoEstado) {
+
     let posicion = numeroPedido - 1;
+
     pedidos[posicion].estado = nuevoEstado;
+
+    document.getElementById("resultado").innerHTML = `
+        <h2>Estado de tu pedido</h2>
+
+        <p><strong>Pedido:</strong> #${numeroPedido}</p>
+        <p><strong>Cliente:</strong> ${pedidos[posicion].cliente}</p>
+        <p><strong>Producto:</strong> ${pedidos[posicion].producto}</p>
+        <p><strong>Estado:</strong> ${pedidos[posicion].estado}</p>
+    `;
 }
 
 function mostrarPromociones() {
@@ -63,7 +74,6 @@ function consultarPedidos() {
         <p><strong>Estado:</strong> ${pedido.estado}</p>
     `;
 }
-
 function crearPedido() {
 
     let cliente = prompt("Ingresa el nombre del cliente:");
@@ -101,6 +111,8 @@ function crearPedido() {
 
     pedidos.push(pedido);
 
+    let numeroPedido = pedidos.length;
+
     document.getElementById("resultado").innerHTML = `
         <h2>Pedido creado</h2>
 
@@ -114,19 +126,14 @@ function crearPedido() {
 
     console.log(`Pedido creado para ${cliente}`);
 
-    setTimeout(() => {
-        actualizarEstadoPedido(pedidos.length, "Preparando");
-    }, 5000);
-
-    setTimeout(() => {
-        actualizarEstadoPedido(pedidos.length, "Empacando");
-    }, 10000);
-
-    setTimeout(() => {
-        actualizarEstadoPedido(pedidos.length, "Pedido entregado");
-    }, 15000);
+    prepararCafe(producto.nombre, function(nuevoEstado) {
+        actualizarEstadoPedido(numeroPedido, nuevoEstado);
+    })
+    .catch(error => {
+        actualizarEstadoPedido(numeroPedido, "Cancelado");
+        console.log(error);
+    });
 }
-
 function listarPedidos() {
 
     let contenido = "<h2>Lista de Pedidos</h2>";
