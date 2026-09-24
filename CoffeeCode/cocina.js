@@ -8,7 +8,8 @@ function agregarProducto(nombre, precio, categoria, cantidad = 10) {
         precio,
         categoria,
         cantidad,
-        disponible: cantidad > 0
+        disponible: cantidad > 0,
+        estado: cantidad > 0 ? "Disponible" : "Agotado"
     };
   productos.push(producto);
   return producto;
@@ -66,6 +67,7 @@ function mostrar() {
                 <hr>
                 <p><strong>${p.id}. ${p.nombre}</strong> - $${p.precio} (${p.categoria})</p>
                 <p>Cantidad disponible: ${p.cantidad}</p>
+                <p>Estado: ${p.estado}</p>
                 <p>${p.cantidad > 0 ? "Disponible" : "No disponible"}</p>
             </div>
         `;
@@ -107,6 +109,7 @@ function mostrarListaDeProductos(titulo, productosParaMostrar) {
                 <p><strong>${producto.id}. ${producto.nombre}</strong> - $${producto.precio}</p>
                 <p>Categoría: ${producto.categoria}</p>
                 <p>Cantidad disponible: ${producto.cantidad}</p>
+                <p>Estado: ${producto.estado}</p>
                 <p>${producto.cantidad > 0 ? "Disponible" : "No disponible"}</p>
             </div>
         `;
@@ -151,13 +154,19 @@ function prepararCafe(nombre) {
 
         setTimeout(() => {
             if (Math.random() < 0.2) {
+                producto.estado = "Disponible";
                 reject(`Error en cocina: se cayó el ${nombre}`);
                 return;
             }
 
-            producto.cantidad -= 1;
-            producto.disponible = producto.cantidad > 0;
-            resolve(`${nombre} listo`);
+            producto.estado = "Empacando";
+
+            setTimeout(() => {
+                producto.cantidad -= 1;
+                producto.disponible = producto.cantidad > 0;
+                producto.estado = "Producto entregado";
+                resolve(`${nombre} listo y entregado`);
+            }, 1000);
         }, 2000);
     });
 }
