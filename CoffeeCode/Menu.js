@@ -14,6 +14,7 @@ function mostrarPromociones() {
             </div>
         `;
     });
+    
 
     document.getElementById("resultado").innerHTML = contenido;
 }
