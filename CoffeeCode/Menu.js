@@ -1,6 +1,10 @@
 
 let pedidos = [];
-
+//  mostrar diferentes estados como pedido recibido,preparando,empacado,entregado o cancelado
+function actualizarEstadoPedido(numeroPedido, nuevoEstado) {
+    let posicion = numeroPedido - 1;
+    pedidos[posicion].estado = nuevoEstado;
+}
 function mostrarPromociones() {
     let contenido = "<h2>Promociones</h2>";
 
@@ -60,6 +64,7 @@ function consultarPedidos() {
         <p><strong>Producto:</strong> ${pedido.producto}</p>
         <p><strong>Precio:</strong> $${pedido.precio}</p>
         <p><strong>Cantidad:</strong> ${pedido.cantidad}</p>
+        <p><strong>Estado:</strong> ${pedido.estado}</p>
     `;
 }
 
@@ -131,6 +136,7 @@ function listarPedidos() {
                 <p>Producto: ${pedido.producto}</p>
                 <p>Precio: $${pedido.precio}</p>
                 <p>Cantidad: ${pedido.cantidad}</p>
+                <p><strong>Estado:</strong> ${pedido.estado}</p>
             </div>
         `;
 
