@@ -35,6 +35,7 @@ function consultarProductos() {
                     <strong>${producto.id}. ${producto.nombre}</strong>
                     - $${producto.precio}
                     - Cantidad disponible: ${producto.cantidad}
+                    - Estado: ${producto.estado}
                 </p>
             `;
         }

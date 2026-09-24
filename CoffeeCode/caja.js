@@ -31,8 +31,8 @@ function realizarPago() {
     // Destructuring
     const { cliente, producto, precio, cantidad } = pedido;
 
-    // reduce() aplicado a ESTE pedido individual: creamos un arreglo con el precio
-    // repetido "cantidad" veces (una entrada por cada unidad pedida) y las sumamos.
+    // reduce() aplicado a ESTE pedido individual: creamos un arreglo con el precio repetido "cantidad" veces (una entrada por cada unidad pedida) y las sumamos.
+  
     const unidades = Array(cantidad).fill(precio);
     const subtotal = unidades.reduce((acumulador, precioUnidad) => {
         return acumulador + precioUnidad;
@@ -52,4 +52,26 @@ function realizarPago() {
     `;
 
     console.log(`Pago calculado para ${cliente}: $${total.toFixed(2)}`);
+}
+
+function notificarPedidoCaja() {
+    const nombre = prompt("¿Qué producto vas a verificar en caja?");
+    const resultado = document.getElementById("resultado");
+
+    resultado.innerHTML = "<p>Cocina está preparando el pedido...</p>";
+
+    prepararCafe(nombre)
+        .then(function pedidoListo(mensaje) {
+            resultado.innerHTML = `
+                <h2>Pedido listo</h2>
+                <p>${mensaje}</p>
+                <p>Puedes proceder a cobrar con "Realizar pago".</p>
+            `;
+        })
+        .catch(function pedidoCancelado(error) {
+            resultado.innerHTML = `
+                <h2>Pedido cancelado</h2>
+                <p>${error}</p>
+            `;
+        });
 }
