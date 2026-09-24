@@ -76,25 +76,7 @@ function mostrar() {
 
 function mostrarProductosFiltrados(titulo, filtro) {
     const productosFiltrados = productos.filter(filtro);
-    let contenido = `<h2>${titulo}</h2>`;
-
-    if (productosFiltrados.length === 0) {
-        contenido += "<p>No hay productos para mostrar.</p>";
-    }
-
-    productosFiltrados.forEach((producto) => {
-        contenido += `
-            <div>
-                <hr>
-                <p><strong>${producto.id}. ${producto.nombre}</strong> - $${producto.precio}</p>
-                <p>Categoría: ${producto.categoria}</p>
-                <p>Cantidad disponible: ${producto.cantidad}</p>
-                <p>${producto.cantidad > 0 ? "Disponible" : "No disponible"}</p>
-            </div>
-        `;
-    });
-
-    document.getElementById("resultado").innerHTML = contenido;
+    mostrarListaDeProductos(titulo, productosFiltrados);
 }
 
 function mostrarProductosBaratos() {
@@ -153,6 +135,50 @@ const promociones = [
 
 function obtenerPromociones() {
     return promociones;
+}
+
+// Prepara un producto usando una Promesa.
+function prepararCafe(nombre) {
+    return new Promise((resolve, reject) => {
+        const producto = productos.find(
+            producto => producto.nombre.toLowerCase() === nombre.toLowerCase()
+        );
+
+        if (!producto || producto.cantidad === 0) {
+            reject(`Falta ingrediente: no hay ${nombre}`);
+            return;
+        }
+
+        setTimeout(() => {
+            if (Math.random() < 0.2) {
+                reject(`Error en cocina: se cayó el ${nombre}`);
+                return;
+            }
+
+            producto.cantidad -= 1;
+            producto.disponible = producto.cantidad > 0;
+            resolve(`${nombre} listo`);
+        }, 2000);
+    });
+}
+
+// Inicia la preparación y muestra su resultado.
+function simularPreparacion() {
+    const nombre = prompt("¿Qué producto quieres preparar?");
+    const resultado = document.getElementById("resultado");
+
+    resultado.innerHTML = "<p>Preparando...</p>";
+
+    prepararCafe(nombre)
+        .then(mensaje => {
+            resultado.innerHTML = `<p>${mensaje}</p>`;
+        })
+        .catch(error => {
+            resultado.innerHTML = `<p>${error}</p>`;
+        })
+        .finally(() => {
+            resultado.innerHTML += "<p>La preparación terminó.</p>";
+        });
 }
 
 function mostrarBebidas() {
