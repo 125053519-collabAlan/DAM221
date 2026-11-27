@@ -20,7 +20,11 @@ export default function TapsLayout(){
 
             <Tabs.Screen
                 name="consulta"
-                options={{title: "Listado"}}
+                options={{title: "Listado",
+                    tabBarIcon:({color,size})=>(
+                        <Ionicons name="list" size={15} color={"blue"}/>
+                    ),
+                }}
             />
         </Tabs>
     );

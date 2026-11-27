@@ -1,14 +1,21 @@
-import React from 'react';
-import {SafeAreaView,View,Text,FlatList,StyleSheet, Pressable,
-} from 'react-native';
-import {router} from 'expo-router'
+import React, { useCallback, useState} from 'react';
+import {router, useFocusEffect} from 'expo-router'
+import { obtenerUsuarios } from '../services/usuariosService';
+import {SafeAreaView,View,Text,FlatList,StyleSheet, Pressable} from 'react-native';
 
 export default function ConsultaUsuariosScreen() {
 
-  const usuarios = [
-    { id: '1', nombre: 'Isay Guerra', edad: 22 },
-    { id: '2', nombre: 'Ana López', edad: 19 },
-  ];
+  const [usuarios, setUsuarios] = useState([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const cargar = async () => {
+        const lista = await obtenerUsuarios();
+        setUsuarios(lista);
+      };
+      cargar();
+    }, [])
+  );
 
   const renderTarjeta = ({ item }) => (
 
@@ -38,6 +45,7 @@ export default function ConsultaUsuariosScreen() {
         data={usuarios}
         keyExtractor={(item) => item.id}
         renderItem={renderTarjeta}
+        ListEmptyComponent={<Text style={styles.vacio}>No hay usuarios registrados.</Text>}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
@@ -94,6 +102,13 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 16,
     color: '#4B5563',
+  },
+
+  vacio: { 
+    textAlign: 'center', 
+    marginTop: 30, 
+    color: '#6B7280', 
+    fontSize: 16,
   },
 
 });

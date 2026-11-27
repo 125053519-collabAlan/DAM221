@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
 import {View,SafeAreaView,Text,TextInput,Pressable,StyleSheet,} from 'react-native';
+import { agregarUsuario } from '../services/usuariosService';
 
 export default function App() {
   const [nombre, setNombre] = useState('');
   const [edad, setEdad] = useState('');
+
+  const guardar = async () => {
+  try {
+    await agregarUsuario(nombre, edad);
+    setNombre('');
+    setEdad('');
+    window.alert('Usuario guardado correctamente.');
+  } catch (error) {
+    window.alert(error.message);
+  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,7 +41,7 @@ export default function App() {
           onChangeText={setEdad}
         />
 
-        <Pressable style={styles.boton}>
+        <Pressable style={styles.boton} onPress={guardar}>
           <Text style={styles.textoBoton}>
             Agregar Usuario
           </Text>

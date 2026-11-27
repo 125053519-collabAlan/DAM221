@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SafeAreaView,View,Text,StyleSheet,Pressable,Modal,} from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
+import { eliminarUsuario } from '../services/usuariosService';
 
 export default function DetalleUsuarioScreen() {
 
@@ -20,9 +21,10 @@ export default function DetalleUsuarioScreen() {
 
 
   // Confirmar la eliminación
-  const confirmarEliminacion = () => {
-    console.log('Eliminar usuario:', id);
+  const confirmarEliminacion = async () => {
+    await eliminarUsuario(id);
     setModalVisible(false);
+    router.back();
   };
 
 

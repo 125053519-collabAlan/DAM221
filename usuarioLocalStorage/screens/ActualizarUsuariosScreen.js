@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SafeAreaView,View,Text, TextInput, Pressable, StyleSheet,} from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-
+import { useLocalSearchParams, router } from 'expo-router';
+import { actualizarUsuario as actualizarEnStorage } from '../services/usuariosService';
 
 export default function ActualizarUsuarioScreen() {
 
@@ -10,7 +10,15 @@ export default function ActualizarUsuarioScreen() {
     const[nombre, setNombre]=useState(params.nombre);
     const[edad, setEdad]=useState(params.edad);
 
-    const actualizarUsuario=()=>{}
+    const actualizarUsuario = async () => {
+      try {
+        await actualizarEnStorage(params.id, nombre, edad);
+        window.alert('Usuario actualizado correctamente.');
+        router.dismissTo('/consulta');
+      } catch (error) {
+        window.alert(error.message);
+      }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
